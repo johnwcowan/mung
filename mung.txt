@@ -1,5 +1,5 @@
 usage: mung file
-       mung --done file ...
+       mung-done file ...
        mung-gc [--yes | --no] [root]
 
 Editing commands:
@@ -35,7 +35,8 @@ help / h        show this help [help]
 Files in the state directory:
 0               copy of original file
 1-n             cached state files
-states          tab-separated file of states: command, description (\t and \n escapes)
+filename	name of file being munged
+states         tab-separated file of states, command, description (\t and \n escapes)
 dependencies    tab-separated file of states, dependencies
 tags            tab-separated file of tags: tag, state number
 stack           file containing the goto stack using state numbers
@@ -44,15 +45,15 @@ lock            pid of currently running mung (can be broken if there is no such
 
 Environment variables:
 
-MUNG_STATE      Directory to store mung states, defaults to /var/tmp
-VISUAL          Editor used by e command
-EDITOR          Used if VISUAL is not defined, defaults to vi
-PAGER           Pager used by p command, defaults to less.
+MUNG_ALL_STATES      Directory to store mung states, defaults to /var/tmp
+VISUAL               Editor used by e command
+EDITOR               Used if VISUAL is not defined, defaults to vi
+PAGER                Pager used by p command, defaults to less.
 
 Modules: globals command load checkpoint
          triv shell show mung help
 
 Shell syntax:  trailing \ for multiline command, %x% for state tag/number
 
-The --done option removes the states for all specified files.
+The mung-done command removes the states for all specified files.
 For the garbage collector, see mung-gc.md

@@ -1,0 +1,47 @@
+#!/bin/dash
+
+states="/tmp/mung-states-$$"
+files="/tmp/mung-files-$$"
+#trap 'rm -f $states $files' 0 2 15
+
+awk="awk"                # can be awk, gawk, mawk
+
+root=${1:-$HOME}
+allstates=${MUNG_ALL_STATES:-/var/tmp}
+find $root -type f -ls 2>/dev/null | $awk '{print $1, $11}' | sort -o $files
+ls $allstates | $awk -F'-' '/^mung-state/ {print $3}' >$states
+join -a1 $states $files | while read -r ino name; do
+    state_dir="$allstates/mung-state-$ino"
+    name="$(cat $state_dir/filename)"
+    if [ -z "$name" ]; then
+        read -p "$name missing: recreate? [Y|n]" recreate
+        case "$recreate" in
+            ""|[Yy]*)
+                cp "$state_dir/0" $name
+                ino="$(ls -i $name | $awk '{print $1}')"
+                mv "$state_dir" "$allstates/$ino";;
+            *)
+                read -p '  Remove state? [Y|n]' remove
+                case "$remove" in
+                ""|[Yy]*)
+                    rm -rf $state;;
+                esac
+        esac
+    else
+        read -p "$name replaced: overwrite? [Y|n]" overwrite
+        case "$overwrite" in
+            ""|[Yy]*) ;;
+            *)
+                read -p '  New name: ' name
+                case $name in
+                    /*) ;;
+                    *)
+                        name="$PWD/name";;
+                esac
+                echo "$name" >"$state_dir/filename"
+        esac
+        cp "$state_dir/0" "$name"
+        new_ino="$(ls -i $name | $awk '{print $1}')"
+        mv "$state_dir" "$root/new_ino"
+    fi
+done
