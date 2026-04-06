@@ -1,12 +1,6 @@
-The `mung-gc [tree]` command runs a garbage collector over the master state directory `$MUNG_ALL_STATES` and makes the files in the tree agree with the states.  This happens when the file being munged is deleted but the state is not removed.
+The `mung-gc [tree]` command runs a garbage collector over the master history directory `$MUNG_ALL_histories` and makes the files in the tree agree with the histories.  This happens when the file being munged is deleted but the history is not removed.
 
-Here's what is done.  Use `find(1)` to locate all files underneath the `tree` argument, which is $HOME by default.  Each file is stored with its inode number in a dictionary.  Then we examine each state and check it against the dictionary as follows, marking some states as needing recovery:
+Here's what is done.  Read through the directory of all histories, which is $MUNG_ALL_HISTORIES (or by default $HOME/.mung)   The file whose pathname appears in "filename" in each history directory is checked to determine its device and inode numbers, which are an absolute identification of the file (they do not change if the file is renamed or rewritten).  If the file exists and its device and inode numbers match the name of the history directory, all is well, and we move on to the next history.
 
- * If the filename and inode number in the state match those in the directory, do nothing.
- * If the filename in the state is not under `tree`, do nothing.
- * If the inode number in the state is not present in the dictionary, mark the state `NOFILE`.
- * If the inode number in the state is present in the dictionary but the filenames don't match, mark the state `WRONGFILE`.
+Then, if the file exists, ask about moving it somewhere else (prompt for the new name).  If it does not exist, ask about restoring it from the current state. In either case, ask about destroying the history.
 
-Then examine all the `NOFILE` states and ask the user whether to recreate the file or not.  If yes, copy state 0 to the file's original location and change the inode number in `$MUNG_ALL_STATES` by renaming the state directory to the inode number of the new file.  If no, remove the state.
-
-Then examine all the `WRONGFILE` states and ask the user whether to recreate the file.  If yes, ask the user *where* to recreate it. The default location is the original file path, overwriting the existing file.  Then copy state 0 to the new location and change the inode number as above.  If no, remove the state.
