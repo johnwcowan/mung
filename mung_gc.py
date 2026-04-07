@@ -33,7 +33,7 @@ def get_current(history_dir):
 def destroy():
     for pathname in sys.argv[2:]:
         history_devino = make_devino(pathname)
-        history_dir = os.path.join(all_histories, history_devino)
+        history_dir = os.path.join(history_repo, history_devino)
         try:
             shutil.rmtree(history_dir)
         except PermissionError:
@@ -50,14 +50,14 @@ def main():
         sys.exit(destroy())
 
     home = os.getenv('HOME')
-    all_histories = os.getenv('MUNG_ALL_STATES', os.path.join(home, '.mung'))
-    if not os.path.exists(all_histories):
-        os.mkdir(all_histories)
-        print(f'mung: {all_histories} does not exist: created', file=sys.stderr)
+    history_repo = os.getenv('MUNG_REPOSITORY', os.path.join(home, '.mung'))
+    if not os.path.exists(history_repo):
+        os.mkdir(history_repo)
+        print(f'mung: {history_repo} does not exist', file=sys.stderr)
         sys.exit(1)
 
-    for history_devino in os.pathdir(all_histories):
-        history_dir = os.path.join(all_histories, history_devino)
+    for history_devino in os.pathdir(history_repo):
+        history_dir = os.path.join(history_repo, history_devino)
         with open(os.path.join(history_dir, 'filename')) as file:
             pathname = file.readline().rstrip()
         pathname_exists = os.path.exists(pathname)
@@ -81,10 +81,10 @@ def main():
         if recreate:
             shutil.copy(os.path.join(history_dir, get_current(history_dir))),
             shutil.move(pathname, os.path.abspath(new_pathname))
-            shutil.move(history_dir, os.path.join(all_histories, new_devino))
+            shutil.move(history_dir, os.path.join(history_repo, new_devino))
                 shutil.copy(os.path.join(history_dir, current(history_dir)). pathname)
                 new_devino = make_devino(pathname)
-                shutil.move(history_dir, os.path.join(all_histories, new_devino)
+                shutil.move(history_dir, os.path.join(history_repo, new_devino)
             elif remove:
                 shutil.rmtree(history_dir)
         else:  # pathname does not exist
@@ -98,19 +98,19 @@ def main():
     name = ''
     if len(devino_name == 2):
         name = devino_name[1]
-    history_dir = os.path.join(all_histories, 'mung-history-' + devino)
+    history_dir = os.path.join(history_repo, 'mung-history-' + devino)
     if os.path.exists(name):
             name = input('  New file: ')
             name = os.path.abspath(name)
             with open(os.path.join(history_dir, 'filename'), 'w') as file:
                 print(name, file=file)
         new_devino = make_devino(name)
-        shutil.move(history_dir, os.path.join(all_histories, new_devino))
+        shutil.move(history_dir, os.path.join(history_repo, new_devino))
     else:
         if yesno(f'{name} missing: recreate', 'y'):
             shutil.copy(os.path.join(history_dir, get_current(history_dir)), name)
             devino = make_devino(name)
-            shutil.move(history_dir, os.path.join(all_histories, devino))
+            shutil.move(history_dir, os.path.join(history_repo, devino))
     
 if __name__ == "__main__":
     main()

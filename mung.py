@@ -5,26 +5,24 @@ import sys
 import shutil
 import json
 
-import script
-import shell
-import show
-import triv
+import repl
+
+home = os.getenv('HOME')
+history_repo = os.getenv('MUNG_REPOSITORY', os.path.join(home, '.mung'))
+history_dir = None	# pathname of directory holding history
 
 pathname = ''		# pathname of file being munged
-history_dir = None	# pathname of directory holding all histories
 states = None		# list of state dictionaries with keys 'cmd' and 'desc'
 dependencies = None	# map from id to list of ids on which it depends
 tags = None		# map from tags to ids
 stack = None		# stack of ids for jumps and returns
 current = 0		# current state id
+last_was_write = False	# last command was a write
 
-home = os.getenv('HOME')
 
 editor = os.getenv('VISUAL', os.getenv('EDITOR', 'vi'))
 pager = os.getenv('PAGER', 'less')
 shell = os.getenv('SHELL')
-all_histories = os.getenv('MUNG_HISTORIES',
-                          os.path.join(home, '.mung'))
 
 
 def set_current(n):
@@ -34,21 +32,23 @@ def set_current(n):
 
 
 def checkpoint():
+    whole = {
+        'states' : states,
+        'dependencies' : dependencies,
+        'tags' : tags,
+        'stack' : stack,
+    }
     with open(os.path.join(history_dir, 'pathname'), 'w') as file:
         print(pathname, file=file)
     with open(os.path.join(history_dir, 'state.json'), 'w') as file:
-        whole = {
-            'states' : states,
-            'dependencies' : dependencies,
-            'tags' : tags,
-            'stack' : stack,
-        }
-        json.dump(whole, file, ensure_ascii=False, ident=2)
-    with open(os.path.join(history_dir, 'current')) as file:
+        json.dump(whole, file, ensure_ascii=False, indent=2)
+        print(file=file)
+    with open(os.path.join(history_dir, 'current'), 'w') as file:
         print(current, file=file)
 
 
 def load():
+    global states, dependencies, tags, stack, current
     with open(os.path.join(history_dir, 'pathname'), 'r') as file:
         saved_pathname = file.readline().rstrip()
     if saved_pathname != pathname:
@@ -65,12 +65,15 @@ def load():
 
 
 def init():
+    os.mkdir(history_dir)
     global states, dependencies, tags, stack
     states = [{"cmd" : "", "desc" : ""}]
     dependencies = {0 : []}
     tags = {}
     stack = []
+    shutil.copy(pathname, os.path.join(history_dir, '0'))
     checkpoint()
+    print(f'Created history at {history_dir} for {pathname}')
 
 
 def main():
@@ -83,14 +86,18 @@ def main():
         print(f'mung: {pathname} not found', file=sys.stderr)
         sys.exit(1)
     pathname = os.path.abspath(pathname)
-    result = stat(pathname)
-    history_dir = os.path.join(all_histories, result.st_dev + '_' + result.st_ino)
-    if not exists(history_dir):
+
+    if not os.path.exists(history_repo):
+        os.mkdir(history_repo)
+        print(f'Created history repository at {history_repo}')
+    result = os.stat(pathname)
+    devino = str(result.st_dev) + "_" + str(result.st_ino)
+    history_dir = os.path.join(history_repo, devino)
+    if not os.path.exists(history_dir):
         init()
-        print('Created history at {history_dir} for {pathname}')
     else:
-        load(history_dir)
-        print('Loaded {len(states) states')
+        load()
+        print(f'Loaded {len(states)} state(s): current state is #{current}')
     repl.repl()
 
     

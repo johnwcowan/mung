@@ -1,14 +1,17 @@
 import mung
 
-def edit():
+def pipe(arg):
     pass
 
-def page():
+def edit(arg):
     pass
 
-def read():
+def page(arg):
     pass
 
-def write():
+def read(arg):
+    pass
+
+def write(arg):
     pass
 

@@ -1,11 +1,11 @@
 import mung
 
-def all():
+def all(arg):
     pass
 
-def choices():
+def choices(arg):
     pass
 
-def show():
+def show(arg):
     pass
 

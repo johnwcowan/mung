@@ -134,46 +134,46 @@ on the current state or the history.
 If the command ends in a backslash, prompt for more lines
 until a line not ending in a backslash is read.""")
 
-def help(arg):
-    if arg is None:
+def help(cmd):
+    if cmd is None:
         help_main();
-    elif arg == '|':
+    elif cmd == '|':
         help_pipe()
-    elif arg == 'describe' or arg == 'd':
+    elif cmd == 'describe' or arg == 'd':
         help_describe
-    elif arg == 'edit' or arg == 'e':
+    elif cmd == 'edit' or arg == 'e':
         help_edit()
-    elif arg  == 'all' or arg == 'a':
+    elif cmd  == 'all' or arg == 'a':
         help_all()
-    elif arg == 'undo' or arg == 'u':
+    elif cmd == 'undo' or arg == 'u':
         help_undo()
-    elif arg == 'unundo' or arg == 'uu':
+    elif cmd == 'unundo' or arg == 'uu':
         help_unundo()
-    elif arg == 'choices' or arg == 'c':
+    elif cmd == 'choices' or arg == 'c':
         help_choices()
-    elif arg == 'tag' or arg == 't':
+    elif cmd == 'tag' or arg == 't':
         help_tag()
-    elif arg == 'jump' or arg == 'j':
+    elif cmd == 'jump' or arg == 'j':
         help_jump()
-    elif arg == 'back' or arg == 'b':
+    elif cmd == 'back' or arg == 'b':
         help_back()
-    elif arg == 'destroy':
+    elif cmd == 'destroy':
         help_destroy()
-    elif arg == 'quit' or arg == 'q':
+    elif cmd == 'quit' or arg == 'q':
         help_quit()
-    elif arg == 'read' or arg == 'r':
+    elif cmd == 'read' or arg == 'r':
         help_read()
-    elif arg == 'write' or arg == 'w':
+    elif cmd == 'write' or arg == 'w':
         help_write()
-    elif arg == 'mung' or arg == 'm':
+    elif cmd == 'mung' or arg == 'm':
         help_mung()
-    elif arg == 'show' or arg == 's':
+    elif cmd == 'show' or arg == 's':
         help_show()
-    elif arg == 'page' or arg == 'p':
+    elif cmd == 'page' or arg == 'p':
         help_page()
-    elif arg == 'help' or help == 'h':
+    elif cmd == 'help' or help == 'h':
         help_help()
-    elif arg == '!':
+    elif cmd == '!':
         help_bang()
     else:
-        print('No such command')
+        print(f'No help for {cmd}')

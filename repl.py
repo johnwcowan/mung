@@ -1,55 +1,74 @@
+import mung
+import help
+import script
+import shell
+import show
+import triv
+
 def repl():
     while True:
         try:
-            cmd = input(':')
+            cmd = input('* ')
         except EOFError:
-            triv.quit()
-        if cmd[0] = '|':
+            print()
+            triv.quit("")
+        if cmd[0] == '|':
             shell.pipe(cmd[1:])
             continue
-        elif cmd[0] == '!'
+        elif cmd[0] == '!':
             cmd = cmd[1:]
             shell.bang(cmd[1:])
             continue
-        elif ' ' not in args:
-           args = None
+        elif ' ' not in cmd:
+           arg = None
         else:
-            cmd, args = cmd.split(' ', 1)
-            args = args.strip()
+            cmdarg = cmd.split(' ', 1)
+            print(f'cmdarg = {cmdarg}')
+            cmd = cmdarg[0]
+            arg = cmdarg[1].strip()
 
-    elif arg == 'describe' or arg == 'd':
-        triv.describe():
-    elif arg == 'edit' or arg == 'e':
-        shell.edit():
-    elif arg  == 'all' or arg == 'a':
-        show.all():
-    elif arg == 'undo' or arg == 'u':
-        triv.undo():
-    elif arg == 'unundo' or arg == 'uu':
-        triv.unundo():
-    elif arg == 'choices' or arg == 'c':
-        show.choices():
-    elif arg == 'tag' or arg == 't':
-        triv.tag():
-    elif arg == 'jump' or arg == 'j':
-        triv.jump():
-    elif arg == 'back' or arg == 'b':
-        triv.back():
-    elif arg == 'destroy':
-        triv.destroy():
-    elif arg == 'quit' or arg == 'q':
-        triv.quit():
-    elif arg == 'read' or arg == 'r':
-        shell.read():
-    elif arg == 'write' or arg == 'w':
-        shell.write():
-    elif arg == 'mung' or arg == 'm':
-        script.mung():
-    elif arg == 'show' or arg == 's':
-        show.show():
-    elif arg == 'page' or arg == 'p':
-        shell.page():
-    elif arg == 'help' or help == 'h':
-        help.help():
-    else:
-        print('No such command')
+        print(f'%%%% cmd={cmd}, arg={arg}')
+        if cmd == 'describe' or cmd == 'd':
+            triv.describe(arg)
+        elif cmd == 'edit' or cmd == 'e':
+            shell.edit(arg)
+        elif cmd  == 'all' or cmd == 'a':
+            show.all(arg)
+        elif cmd == 'undo' or cmd == 'u':
+            triv.undo(arg)
+        elif cmd == 'unundo' or cmd == 'uu':
+            triv.unundo(arg)
+        elif cmd == 'edit' or cmd == 'e':
+            shell.edit(arg)
+        elif cmd  == 'all' or cmd == 'a':
+            show.all(arg)
+        elif cmd == 'undo' or cmd == 'u':
+            triv.undo(arg)
+        elif cmd == 'unundo' or cmd == 'uu':
+            triv.unundo(arg)
+        elif cmd == 'choices' or cmd == 'c':
+            show.choices(arg)
+        elif cmd == 'tag' or cmd == 't':
+            triv.tag(arg)
+        elif cmd == 'jump' or cmd == 'j':
+            triv.jump(arg)
+        elif cmd == 'back' or cmd == 'b':
+            triv.back(arg)
+        elif cmd == 'destroy':
+            triv.destroy(arg)
+        elif cmd == 'quit' or cmd == 'q':
+            triv.quit(arg)
+        elif cmd == 'read' or cmd == 'r':
+            shell.read(arg)
+        elif cmd == 'write' or cmd == 'w':
+            shell.write(arg)
+        elif cmd == 'mung' or cmd == 'm':
+            script.mung(arg)
+        elif cmd == 'show' or cmd == 's':
+            show.show(arg)
+        elif cmd == 'page' or cmd == 'p':
+            shell.page(arg)
+        elif cmd == 'help' or cmd == 'h':
+            help.help(arg)
+        else:
+            print(f'No command "{cmd}"')

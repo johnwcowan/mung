@@ -1,4 +1,4 @@
 import mung
 
-def mung():
+def mung(arg):
     pass
