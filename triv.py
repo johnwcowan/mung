@@ -1,55 +1,97 @@
 import sys
 
+import g
+import repl
 import mung
 
-def detag(arg):
+def detag(tag):
     try:
-        n = int(arg)
-        return int(n)
+        n = int(tag)
+        if n < 0 or n > len(g.states):
+            return None
+        else:
+           return n
     except ValueError:
-        if arg in mung.tags:
-            return mung.tags[arg]
+        if tag in g.tags:
+            return g.tags[arg]
         else:
             return None
 
-def back(arg):
-    pass
+def back(_):
+    try:
+        g.current = g.jump_stack.pop()
+        print(f'Now in state #{g.current}')
+        mung.checkpoint()
+    except IndexError:
+        print('Nowhere to return to')
 
-def describe(arg):
-    if arg is None:
-        try:
-            cmd = mung.states[mung.current]['cmd']
-            desc = mung.states[mung.current]['desc']
-            if desc == '':
-                desc = "|" + cmd
-            print(f'State #{mung.current} is "{desc}"')
-        except KeyError:
-            print('No description')
+def describe(desc):
+    if desc is None:
+        cmd = g.states[g.current]['cmd']
+        desc = g.states[g.current]['desc']
+        if desc == '':
+            desc = "| " + cmd
+        print(desc, end='')
     else:
-        mung.states[mung.current]['desc'] = arg
+        desc = repl.multiline(arg, False)
+        g.states[g.current]['desc'] = desc + '\n'
         mung.checkpoint()
 
-def destroy(arg):
-    if mung.last_was_write:
-      shutil.rmtree(mung.history_dir)
-      print('State destroyed')
-      exit(0)
+def destroy(_):
+    if g.last_was_write:
+        try:
+            shutil.rmtree(g.history_dir)
+        except PermissionError:
+            print(f'State for {pathname} cannot be removed', file=sys.stderr)
+        except FileNotFoundError:
+            print(f'{pathname} is not being munged', file=sys.stderr)
+        print('mung: terminating with history destroyed')
+        exit(0)
     else:
-       print('Write file and repeat destroy')
+       print('Write file and then destroy again')
 
-def jump(arg):
-    pass
+def jump(newstate):
+    if newstate is None:
+        print('Unknown state or tag')
+        return
+    newstate = detag(newstate)
+    g.jump_stack.append(g.current)
+    g.current = newstate
+    print(f'Now in state #{g.current}')
+    mung.checkpoint()
 
-def quit(arg):
-    print('mung: terminating with states preserved')
+def quit(_):
+    print('mung: terminating with history preserved')
     sys.exit(0)
 
-def tag(arg):
-    pass
+def tag(newtag):
+    if newtag is None:
+        print('Must specify a tag')
+        return
+    try:
+        _ = int(newtag)
+    except ValueError:
+        g.tags[newtag] = g.current
+        mung.checkpoint()
+        return
+    print('Tag cannot be numeric')
 
-def undo(arg):
-    pass
+def undo(_):
+    try:
+        newstate = g.states[g.current]['dependencies'][0]
+    except IndexError:
+        print('Nothing to undo')
+        return
+    g.undo_stack.push(g.current)
+    g.current = newstate
+    print(f'Now in state #{g.current}')
+    mung.checkpoint()
 
-def unundo(arg):
-    pass
+def unundo(_):
+    try:
+        g.current = g.undo_stack.pop()
+        print(f'Now in state #{g.current}')
+        mung.checkpoint()
+    except IndexError:
+        print('Nothing to unundo')
 

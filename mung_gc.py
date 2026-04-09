@@ -43,8 +43,8 @@ def destroy():
 
 
 def main():
-    if len(sys.argv) == 0):
-        then print('usage: mung_gc [--destroy file ...]', file=sys.stderr)
+    if len(sys.argv) == 0:
+        print('usage: mung_gc [--destroy file ...]', file=sys.stderr)
         exit(1)
     elif sys.argv[1] == '--destroy':
         sys.exit(destroy())
@@ -82,7 +82,7 @@ def main():
             shutil.copy(os.path.join(history_dir, get_current(history_dir))),
             shutil.move(pathname, os.path.abspath(new_pathname))
             shutil.move(history_dir, os.path.join(history_repo, new_devino))
-                shutil.copy(os.path.join(history_dir, current(history_dir)). pathname)
+            shutil.copy(os.path.join(history_dir, current(history_dir)). pathname)
                 new_devino = make_devino(pathname)
                 shutil.move(history_dir, os.path.join(history_repo, new_devino)
             elif remove:

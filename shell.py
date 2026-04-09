@@ -1,4 +1,4 @@
-import mung
+import g
 
 def pipe(arg):
     pass

@@ -1,17 +1,30 @@
-import mung
 import help
 import script
 import shell
 import show
 import triv
 
+def multiline(line, keep):
+    while True:
+        last = len(line) - 1
+        if line[last] != '\\':
+            return line
+        else:
+            if not keep:
+                line = line[:last]
+            line += '\n' + input('> ')
+
+
 def repl():
     while True:
         try:
             cmd = input('* ')
+            cmd = cmd.strip()
         except EOFError:
             print()
             triv.quit("")
+        if cmd == '':
+            continue
         if cmd[0] == '|':
             shell.pipe(cmd[1:])
             continue
@@ -23,11 +36,9 @@ def repl():
            arg = None
         else:
             cmdarg = cmd.split(' ', 1)
-            print(f'cmdarg = {cmdarg}')
             cmd = cmdarg[0]
             arg = cmdarg[1].strip()
 
-        print(f'%%%% cmd={cmd}, arg={arg}')
         if cmd == 'describe' or cmd == 'd':
             triv.describe(arg)
         elif cmd == 'edit' or cmd == 'e':
@@ -46,8 +57,6 @@ def repl():
             triv.undo(arg)
         elif cmd == 'unundo' or cmd == 'uu':
             triv.unundo(arg)
-        elif cmd == 'choices' or cmd == 'c':
-            show.choices(arg)
         elif cmd == 'tag' or cmd == 't':
             triv.tag(arg)
         elif cmd == 'jump' or cmd == 'j':
@@ -72,3 +81,4 @@ def repl():
             help.help(arg)
         else:
             print(f'No command "{cmd}"')
+

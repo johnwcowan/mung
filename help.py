@@ -1,8 +1,8 @@
 import os
-import mung
+import g
 
 def help_main():
-    os.system(f"""{mung.pager} <<END
+    os.system(f"""{g.pager} <<END
 Editing commands:
 |               filter state to make new state
 describe / d    set comment for state
@@ -12,15 +12,13 @@ State tree commands:
 all / a         show whole tree
 undo / u        undo last change to state
 unundo / uu     undo undo
-choices / c     list redo choices
-
 Tag commands:
 tag / t         tag current state with specified tag
 jump / j        jump to specified tagged state
 back / b        return from last jump
 
 Termination commands:
-destroy         delete all states and terminate
+destroy         destroy the history and terminate
 quit / q / EOF  just terminate
 
 I/O commands:
@@ -37,11 +35,10 @@ END """)
 
 def help_pipe():
     print("""\
-Specify a shell command that filters the current state
-to produce a new state, and make the new state current.
-If the command ends in a backslash, prompt for more lines
-until a line not ending in a backslash is read.
-Text within braces represents the number or tag of a state:
+Specify a shell command that filters the current state to produce a
+new state, and make the new state current.  If the command ends in a
+backslash, prompt for more lines until a line not ending in a backslash
+is read.  Text within braces represents the number or tag of a state:
 it is converted into the name of the file holding that state.""")
 
 def help_describe():
@@ -50,8 +47,8 @@ Specify a description of the current state.""")
 
 def help_edit():
    print("""\
-Run {mung.editor} to edit the current state
-to produce a new state, and make the new state current.""")
+Run {g.editor} to edit the current state to produce a new state, and
+make the new state current.""")
 
 def help_all():
     print("""\
@@ -59,16 +56,12 @@ Display all the states.""")
 
 def help_undo():
     print("""\
-    Switch to the state from which the current state was created.""")
+Switch to the state from which the current state was created.""")
 
 def help_unundo():
     print("""\
 Go to the state from which the current state was created.
 If there is more than one, go to the most recent one.""")
-
-def help_choices():
-    print("""\
-List the states from which the current state was created.""")
 
 def help_tag():
     print("""\
@@ -85,9 +78,8 @@ Return to the state from which the last jump command was issued.""")
 
 def help_destroy():
     print("""\
-Destroy all states and terminate mung.
-If the current state has not been written,
-this command must be given twice in a row to prevent
+Destroy the history and terminate mung.  If the current state has not
+been written, this command must be given twice in a row to prevent
 unintentional loss.""")
 
 def help_quit():
@@ -96,8 +88,8 @@ Terminate mung, preserving the history.""")
 
 def help_read():
     print("""\
-Create a new state with the contents of the specified file,
-and make it current. The content of the current state is not used.""")
+Create a new state with the contents of the specified file, and make it
+current. The content of the current state is not used.""")
 
 def help_write():
     print("""\
@@ -108,11 +100,10 @@ def help_mung():
     print("""\
 Write a script of shell commands that when executed will transform
 the standard input and write the result to the standard output, after
-performing all the steps
-specified by | commands, edit commands, and read commands to get there.
-Note that the editor will be run and the user must repeat whatever was
-originally done in it to get to the next state.  Read commands will
-take their input from the originally named file.""")
+performing all the steps specified by | commands, edit commands, and read
+commands to get there.  Note that the editor will be run and the user
+must repeat whatever was originally done in it to get to the next state.
+Read commands will take their input from the originally named file.""")
 
 def help_show():
     print("""\
@@ -120,7 +111,7 @@ Display information about the file being munged and the current state.""")
 
 def help_page():
     print("""\
-View the contents of the current state using {mung.pager}.
+View the contents of the current state using {g.pager}.
 The pager should not make any changes to the state.""")
 
 def help_help():
@@ -129,10 +120,9 @@ Display the list of commands and a brief explanation of each.""")
 
 def help_bang():
     print("""\
-Execute the specified shell command. This has no effect
-on the current state or the history.
-If the command ends in a backslash, prompt for more lines
-until a line not ending in a backslash is read.""")
+Execute the specified shell command. This has no effect on the current
+state or the history.  If the command ends in a backslash, prompt for
+more lines until a line not ending in a backslash is read.""")
 
 def help(cmd):
     if cmd is None:
@@ -149,8 +139,6 @@ def help(cmd):
         help_undo()
     elif cmd == 'unundo' or arg == 'uu':
         help_unundo()
-    elif cmd == 'choices' or arg == 'c':
-        help_choices()
     elif cmd == 'tag' or arg == 't':
         help_tag()
     elif cmd == 'jump' or arg == 'j':

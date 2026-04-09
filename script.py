@@ -1,4 +1,4 @@
-import mung
+import g
 
 def mung(arg):
-    pass
+    print('Not implemented')
