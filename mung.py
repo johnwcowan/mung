@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# # The mung program
+# The mung program
 
 # Mung is an editor that, rather than fiddling with individual lines or
 # characters, passes the entire file through a series of shell filters.
@@ -29,24 +29,11 @@ import shutil
 import json
 
 import g
+import state
 import repl
 
-
-def checkpoint():
-    whole = {
-        'states' : g.states,
-        'tags' : g.tags,
-        'stack' : g.stack,
-    }
-    with open(os.path.join(g.history_dir, 'pathname'), 'w') as file:
-        print(g.pathname, file=file)
-    with open(os.path.join(g.history_dir, 'state.json'), 'w') as file:
-        json.dump(whole, file, ensure_ascii=False, indent=2)
-        print(file=file)
-    with open(os.path.join(g.history_dir, 'current'), 'w') as file:
-        print(g.current, file=file)
-
-
+# Load the current state from the history directory
+:ka
 def load():
     with open(os.path.join(g.history_dir, 'pathname'), 'r') as file:
         saved_pathname = file.readline().rstrip()
@@ -63,6 +50,7 @@ def load():
        g.current = int(file.readline().rstrip())
 
 
+# Initialize a new history directory
 def init():
     os.mkdir(g.history_dir)
     g.states = [{
@@ -74,7 +62,7 @@ def init():
     g.tags = {}
     g.stack = []
     shutil.copy(g.pathname, os.path.join(g.history_dir, '0'))
-    checkpoint()
+    save.save()
 
 
 def main():

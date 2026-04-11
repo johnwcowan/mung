@@ -2,14 +2,16 @@
 
 import g
 
+# Given a state number, return a tag
 def get_tag(n):
     for tag in g.tags:
         if g.tags[tag] == n:
             return tag
     return None
 
+# Print one line for "all" command
+# Shows the state number, tag, and first line of the description
 def oneline(id, n):
-    print(' ' * n, f'#{g.states[id]}', end = '')
     tag = get_tag(id)
     if tag is None:
         print(f' ({tag})', end='')
@@ -20,6 +22,9 @@ def oneline(id, n):
         desc = '| ' + g.states[id]['cmd']
     print(' ', desc)
 
+# Invert the tree of staes
+# Whereas g.states has each state holding its parent,
+# the result of this function has each state holding its children.
 def invert_tree():
     count = len(g.states)
     result = [[] for _ in range(0, count)]
@@ -28,6 +33,8 @@ def invert_tree():
         result[parent].append(child)
     return result
 
+# Print the children (and their children, etc.) with proper indentation.
+# Uses oneline to do the actual printing.
 def recur(tree, id, depth):
     children = tree[id]
     if len(children) != 0:
@@ -36,12 +43,13 @@ def recur(tree, id, depth):
             oneline(child, n + 1)
             recur(tree, child, depth + 1)
 
-def all(arg):
+# The 'all' command.
+def all(_):
     tree = invert_tree()
     oneline(0, 0)
     recur(tree, 0, 0)
 
-def show(arg):
+def show(_):
     state = g.states[g.current]
     print(f'File: {g.pathname}')
     print(f'State #{g.current}:', end='')

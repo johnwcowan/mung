@@ -13,11 +13,10 @@ edit / e        edit state into a new state
 State tree commands:
 all / a         show whole tree
 undo / u        undo last change to state
-unundo / uu     undo undo
 Tag commands:
 tag / t         tag current state with specified tag
 jump / j        jump to specified tagged state
-back / b        return from last jump
+back / b        return from last jump or undo
 
 Termination commands:
 destroy         destroy the history and terminate
@@ -60,10 +59,6 @@ def help_undo():
     print("""\
 Switch to the state from which the current state was created.""")
 
-def help_unundo():
-    print("""\
-Go to the state from which the current state was created.
-If there is more than one, go to the most recent one.""")
 
 def help_tag():
     print("""\
@@ -76,7 +71,7 @@ Switch to the state identified by number or tag.""")
 
 def help_back():
     print("""\
-Return to the state from which the last jump command was issued.""")
+Return to the state from which the last jump or undo command was issued.""")
 
 def help_destroy():
     print("""\
@@ -139,8 +134,6 @@ def help(cmd):
         help_all()
     elif cmd == 'undo' or arg == 'u':
         help_undo()
-    elif cmd == 'unundo' or arg == 'uu':
-        help_unundo()
     elif cmd == 'tag' or arg == 't':
         help_tag()
     elif cmd == 'jump' or arg == 'j':

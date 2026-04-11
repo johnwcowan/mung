@@ -1,19 +1,20 @@
 # Commands that interact with the file system
 
+import save
 import g
 
-def pipe(arg):
+def pipe(cmd):
     pass
 
-def edit(arg):
+def edit(_):
     pass
 
-def page(arg):
+def page(_):
     pass
 
-def read(arg):
+def read(filename):
     pass
 
-def write(arg):
+def write(filename):
     pass
 

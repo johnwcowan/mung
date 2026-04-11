@@ -23,7 +23,7 @@ def back(_):
     try:
         g.current = g.stack.pop()
         print(f'Now in state #{g.current}')
-        mung.checkpoint()
+        save.save()
     except IndexError:
         print('Nowhere to go back to')
 
@@ -37,7 +37,7 @@ def describe(desc):
     else:
         desc = repl.multiline(desc, False)
         g.states[g.current]['desc'] = desc + '\n'
-        mung.checkpoint()
+        save.save()
 
 def destroy(_):
     if g.last_was_write:
@@ -60,7 +60,7 @@ def jump(newstate):
     g.stack.append(g.current)
     g.current = newstate
     print(f'Now in state #{g.current}')
-    mung.checkpoint()
+    save.save()
 
 def quit(_):
     print('mung: terminating with history preserved')
@@ -74,7 +74,7 @@ def tag(newtag):
         _ = int(newtag)
     except ValueError:
         g.tags[newtag] = g.current
-        mung.checkpoint()
+        save.save()
         return
     print('Tag cannot be numeric')
 
@@ -87,5 +87,5 @@ def undo(_):
     g.stack.append(g.current)
     g.current = newstate
     print(f'Now in state #{g.current}')
-    mung.checkpoint()
+    save.save()
 
