@@ -1,4 +1,5 @@
+# Create a shell script
 import g
 
-def mung(arg):
+def mung(filename):
     print('Not implemented')

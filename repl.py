@@ -1,3 +1,5 @@
+# The mung command loop
+
 import help
 import script
 import shell
@@ -6,12 +8,11 @@ import triv
 
 def multiline(line, keep):
     while True:
-        last = len(line) - 1
-        if line[last] != '\\':
+        if line[-1] != '\\':
             return line
         else:
             if not keep:
-                line = line[:last]
+                line = line[0:-1]
             line += '\n' + input('> ')
 
 
@@ -47,16 +48,12 @@ def repl():
             show.all(arg)
         elif cmd == 'undo' or cmd == 'u':
             triv.undo(arg)
-        elif cmd == 'unundo' or cmd == 'uu':
-            triv.unundo(arg)
         elif cmd == 'edit' or cmd == 'e':
             shell.edit(arg)
         elif cmd  == 'all' or cmd == 'a':
             show.all(arg)
         elif cmd == 'undo' or cmd == 'u':
             triv.undo(arg)
-        elif cmd == 'unundo' or cmd == 'uu':
-            triv.unundo(arg)
         elif cmd == 'tag' or cmd == 't':
             triv.tag(arg)
         elif cmd == 'jump' or cmd == 'j':

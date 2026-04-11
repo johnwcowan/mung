@@ -1,3 +1,5 @@
+# Trivially implemented commands
+
 import sys
 
 import g
@@ -13,17 +15,17 @@ def detag(tag):
            return n
     except ValueError:
         if tag in g.tags:
-            return g.tags[arg]
+            return g.tags[tag]
         else:
             return None
 
 def back(_):
     try:
-        g.current = g.jump_stack.pop()
+        g.current = g.stack.pop()
         print(f'Now in state #{g.current}')
         mung.checkpoint()
     except IndexError:
-        print('Nowhere to return to')
+        print('Nowhere to go back to')
 
 def describe(desc):
     if desc is None:
@@ -33,7 +35,7 @@ def describe(desc):
             desc = "| " + cmd
         print(desc, end='')
     else:
-        desc = repl.multiline(arg, False)
+        desc = repl.multiline(desc, False)
         g.states[g.current]['desc'] = desc + '\n'
         mung.checkpoint()
 
@@ -55,7 +57,7 @@ def jump(newstate):
         print('Unknown state or tag')
         return
     newstate = detag(newstate)
-    g.jump_stack.append(g.current)
+    g.stack.append(g.current)
     g.current = newstate
     print(f'Now in state #{g.current}')
     mung.checkpoint()
@@ -78,20 +80,12 @@ def tag(newtag):
 
 def undo(_):
     try:
-        newstate = g.states[g.current]['dependencies'][0]
+        newstate = g.states[g.current]['deps'][0]
     except IndexError:
         print('Nothing to undo')
         return
-    g.undo_stack.push(g.current)
+    g.stack.append(g.current)
     g.current = newstate
     print(f'Now in state #{g.current}')
     mung.checkpoint()
-
-def unundo(_):
-    try:
-        g.current = g.undo_stack.pop()
-        print(f'Now in state #{g.current}')
-        mung.checkpoint()
-    except IndexError:
-        print('Nothing to unundo')
 

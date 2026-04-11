@@ -1,4 +1,6 @@
 import os
+# Display help for all commands plus help for each command
+
 import g
 
 def help_main():

@@ -1,4 +1,6 @@
-usage: mung file
+# The mung program
+
+usage: see mung.py, mung_gc.py
        mung-gc [destroy file ...]
 
 Editing commands: see repl.py, help.py

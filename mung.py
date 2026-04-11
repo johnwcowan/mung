@@ -1,5 +1,28 @@
 #!/usr/bin/env python
 
+# # The mung program
+
+# Mung is an editor that, rather than fiddling with individual lines or
+# characters, passes the entire file through a series of shell filters.
+# The results of each filer are saved in a history along with metadata
+# that allows reconstruction of how the munging was done.  The histories
+# are kept in a history repository, by default $MUNG_ALL_REPOSITORIES.
+
+# The commands allow the creation of a tree rather than just a sequence of
+# states, and it's possible to display and move around the tree of states,
+# creating new states at any point.  A state can be written back to the
+# original file or to any other file.  An ordinary interactive editor can
+# be run on a state to create a new state, and it's also possible for a
+# new state to be created by reading in an existing file.
+
+# States can be given a unique tag and a textual description, and its
+# possible to display the whole tree or the metadata of a single state,
+# and to page through the file associated with a particular state.
+
+# Finally, a shell script that transforms the initial state into the
+# current state can be written out.  This script can be run outside mung
+# to transform any file into any other file.
+
 import os
 import sys
 import shutil
@@ -13,8 +36,7 @@ def checkpoint():
     whole = {
         'states' : g.states,
         'tags' : g.tags,
-        'jump_stack' : g.jump_stack,
-        'undo_stack' : g.undo_stack,
+        'stack' : g.stack,
     }
     with open(os.path.join(g.history_dir, 'pathname'), 'w') as file:
         print(g.pathname, file=file)
@@ -36,8 +58,7 @@ def load():
         whole = json.load(file)
     g.states = whole['states']
     g.tags = whole['tags']
-    g.jump_stack = whole['jump_stack']
-    g.undo_stack = whole['undo_stack']
+    g.stack = whole['stack']
     with open(os.path.join(g.history_dir, 'current'), 'r') as file:
        g.current = int(file.readline().rstrip())
 
@@ -51,8 +72,7 @@ def init():
         'deps' : []
     }]
     g.tags = {}
-    g.jump_stack = []
-    g.undo_stack = []
+    g.stack = []
     shutil.copy(g.pathname, os.path.join(g.history_dir, '0'))
     checkpoint()
 

@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
 
+# The mung-gc command runs a garbage collector over the master history
+# directory and makes the files in the tree agree with the histories.
+# This happens when the file being munged is deleted or replaced but the
+# history is not removed.
+
+# Here's what is done.  Read through the directory of all histories,
+# which is $MUNG_ALL_HISTORIES (or by default $HOME/.mung)   The file
+# whose pathname appears in "pathname" in each history directory is
+# checked to determine its device and inode numbers, which are an absolute
+# identification of the file (they do not change if the file is renamed
+# or rewritten).  If the file exists and its device and inode numbers
+# match the name of the history directory, all is well, and we move on to
+# the next history.
+
+# Otherwise, if the file exists, ask about moving it somewhere else (prompt
+# for the new name).  If it does not exist, ask about restoring it from
+# the current state. In either case, ask about destroying the history.
+
+# This file is self-contained and is not part of the mung command.
+
 import os
 import shutil
 import sys
@@ -10,6 +30,7 @@ def make_devino(name):
     return '_'.join(str(result.st_dev), str(result.st_ino))
 
 
+# Ask a yes or no question (the prompt has already been printed)
 def yesno(prompt, default):
     while True:
         if default == 'y':
@@ -25,11 +46,13 @@ def yesno(prompt, default):
             return default == 'y'
 
 
+# Extract the current state from the "current" file in a history directory
 def get_current(history_dir):
     with open(os.path.join(history_dir, 'current')) as file:
         return file.readline().rstrip()
 
 
+# Destroy the histories given on the command line directory
 def destroy():
     for pathname in sys.argv[2:]:
         history_devino = make_devino(pathname)
@@ -42,6 +65,7 @@ def destroy():
             print(f'{pathname} is not being munged', file=sys.stderr)
 
 
+# The main program
 def main():
     if len(sys.argv) == 0:
         print('usage: mung_gc [--destroy file ...]', file=sys.stderr)
@@ -49,6 +73,7 @@ def main():
     elif sys.argv[1] == '--destroy':
         sys.exit(destroy())
 
+    # Set up the variables and create the history repository if needed
     home = os.getenv('HOME')
     history_repo = os.getenv('MUNG_REPOSITORY', os.path.join(home, '.mung'))
     if not os.path.exists(history_repo):
@@ -56,6 +81,7 @@ def main():
         print(f'mung: {history_repo} does not exist', file=sys.stderr)
         sys.exit(1)
 
+    # Walk through the history directories
     for history_devino in os.pathdir(history_repo):
         history_dir = os.path.join(history_repo, history_devino)
         with open(os.path.join(history_dir, 'filename')) as file:
@@ -65,6 +91,7 @@ def main():
         if pathname_exists and history_devino == pathname_devino:
             continue
 
+        # Interact with the user for a problematic history directory
         print(f'Problem with {path}:')
         if pathname_exists:
             rename = yesno('  Does not match history: rename file', 'n')
@@ -76,6 +103,7 @@ def main():
             recreate = yesno('  Missing: recreate file', 'n')
         remove = yesno('  Destroy history', 'n')
 
+        # Copy, move, and rewrite files
         if rename:
             shutil.move(pathname, new_pathname)
         if recreate:
@@ -98,7 +126,7 @@ def main():
     name = ''
     if len(devino_name == 2):
         name = devino_name[1]
-    history_dir = os.path.join(history_repo, 'mung-history-' + devino)
+    history_dir = os.path.join(history_repo, devino)
     if os.path.exists(name):
             name = input('  New file: ')
             name = os.path.abspath(name)
