@@ -6,7 +6,8 @@
 import os
 
 home = os.getenv('HOME')
-history_repo = os.getenv('MUNG_REPOSITORY', os.path.join(home, '.mung'))
+history_repo = os.getenv('MUNG_REPOSITORY',
+                         os.path.join(home, '.local/share/mung'))
 history_dir = None	# pathname of directory holding history
 
 pathname = ''		# pathname of file being munged

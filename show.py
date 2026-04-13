@@ -58,7 +58,12 @@ def show(_):
         print(f' (tag: {tag})')
     else:
         print()
-    print(f'  Command: {state["cmd"]}')
+    print('  Command; ', end='')
+    cmd = state['cmd']
+    if cmd is None:
+        print('none')
+    else:
+        print(cmd)
     print('  Parent; ', end='')
     parent = state['parent']
     if parent is None:

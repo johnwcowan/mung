@@ -75,7 +75,8 @@ def main():
 
     # Set up the variables and create the history repository if needed
     home = os.getenv('HOME')
-    history_repo = os.getenv('MUNG_REPOSITORY', os.path.join(home, '.mung'))
+    history_repo = os.getenv('MUNG_REPOSITORY',
+                             os.path.join(home, '.local/share/mung'))
     if not os.path.exists(history_repo):
         os.mkdir(history_repo)
         print(f'mung: {history_repo} does not exist', file=sys.stderr)

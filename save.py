@@ -1,5 +1,10 @@
 # Loading and saving states
 
+import os
+import json
+
+import g
+
 # Save the current state tp the history directory
 def save():
     whole = {

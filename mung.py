@@ -29,11 +29,10 @@ import shutil
 import json
 
 import g
-import state
+import save
 import repl
 
 # Load the current state from the history directory
-:ka
 def load():
     with open(os.path.join(g.history_dir, 'pathname'), 'r') as file:
         saved_pathname = file.readline().rstrip()

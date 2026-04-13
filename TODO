@@ -4,7 +4,7 @@ usage: see mung.py, mung_gc.py
 Editing commands: see repl.py, help.py
 
 Environment variables:
-MUNG_STATE_TREES   Directory to store mung states, defaults to $HOME/.mung
+MUNG_REPOSITORY    Directory to store mung states, defaults to $HOME/.mung
 VISUAL             Editor used by e command
 EDITOR             Used if VISUAL is not defined, defaults to vi
 PAGER              Pager used by p command, defaults to less.
