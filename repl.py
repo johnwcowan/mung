@@ -6,16 +6,6 @@ import shell
 import show
 import triv
 
-def multiline(line, keep):
-    while True:
-        if line[-1] != '\\':
-            return line
-        else:
-            if not keep:
-                line = line[0:-1]
-            line += '\n' + input('> ')
-
-
 def repl():
     while True:
         try:

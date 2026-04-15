@@ -61,7 +61,7 @@ def init():
     g.tags = {}
     g.stack = []
     shutil.copy(g.pathname, os.path.join(g.history_dir, '0'))
-    save.save()
+    util.save()
 
 
 def main():
@@ -76,13 +76,14 @@ def main():
 
     if not os.path.exists(g.history_repo):
         os.mkdir(g.history_repo)
-        print(f'Created g.history repository at {g.history_repo}')
+        print(f'Created history repository at {g.history_repo}')
     result = os.stat(g.pathname)
     devino = str(result.st_dev) + '_' + str(result.st_ino)
     g.history_dir = os.path.join(g.history_repo, devino)
     if not os.path.exists(g.history_dir):
         init()
-        print(f'Created history at {g.history_dir} for {g.pathname}')
+        print(f'Created history for {g.pathname}')
+        print(f'  at {g.history_dir}')
     else:
         load()
         count = len(g.states)

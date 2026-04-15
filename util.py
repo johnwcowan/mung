@@ -1,4 +1,4 @@
-# Loading and saving states
+# Utility functions
 
 import os
 import json
@@ -21,3 +21,12 @@ def save():
         print(g.current, file=file)
 
 
+def multiline(line, keep):
+:ka
+    while True:
+        if line[-1] != '\\':
+            return line
+        else:
+            if not keep:
+                line = line[0:-1]
+            line += '\n' + input('> ')

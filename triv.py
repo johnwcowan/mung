@@ -4,7 +4,6 @@ import sys
 
 import g
 import repl
-import mung
 
 def detag(tag):
     try:
@@ -23,21 +22,21 @@ def back(_):
     try:
         g.current = g.stack.pop()
         print(f'Now in state #{g.current}')
-        save.save()
+        util.save()
     except IndexError:
         print('Nowhere to go back to')
 
 def describe(desc):
-    if desc is None:
+    if desc is None or desc == '':
         cmd = g.states[g.current]['cmd']
         desc = g.states[g.current]['desc']
-        if desc == '':
+        if desc == '' and cmd != '':
             desc = "| " + cmd
         print(desc, end='')
     else:
         desc = repl.multiline(desc, False)
         g.states[g.current]['desc'] = desc + '\n'
-        save.save()
+        util.save()
 
 def destroy(_):
     if g.last_was_write:
@@ -60,7 +59,7 @@ def jump(newstate):
     g.stack.append(g.current)
     g.current = newstate
     print(f'Now in state #{g.current}')
-    save.save()
+    util.save()
 
 def quit(_):
     print('mung: terminating with history preserved')
@@ -74,7 +73,7 @@ def tag(newtag):
         _ = int(newtag)
     except ValueError:
         g.tags[newtag] = g.current
-        save.save()
+        util.save()
         return
     print('Tag cannot be numeric')
 
@@ -87,5 +86,5 @@ def undo(_):
     g.stack.append(g.current)
     g.current = newstate
     print(f'Now in state #{g.current}')
-    save.save()
+    util.save()
 

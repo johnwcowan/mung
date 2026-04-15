@@ -1,6 +1,9 @@
 # Commands that interact with the file system
 
-import save
+import os
+import shutil
+
+import util
 import g
 
 def pipe(cmd):
@@ -13,7 +16,8 @@ def page(_):
     pass
 
 def read(filename):
-    pass
+    pathname = os.path.join(history_dir, str(g.current))
+    system(f'{g.pager} {g.pathname}')
 
 def write(filename):
     pass

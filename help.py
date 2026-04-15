@@ -7,7 +7,7 @@ def help_main():
     os.system(f"""{g.pager} <<END
 Editing commands:
 |               filter state to make new state
-describe / d    set comment for state
+describe / d    set description for state
 edit / e        edit state into a new state
 
 State tree commands:
@@ -25,7 +25,7 @@ quit / q / EOF  just terminate
 I/O commands:
 read / r        read specified file to get the next state
 write / w       write current state to specified file
-mung | m        write script to get to current state to specified file
+mung / m        write script to get to current state to specified file
 
 Miscellaneous commands:
 show / s        file and state metadata
@@ -36,18 +36,19 @@ END """)
 
 def help_pipe():
     print("""\
-Specify a shell command that filters the current state to produce a
-new state, and make the new state current.  If the command ends in a
-backslash, prompt for more lines until a line not ending in a backslash
-is read.  Text within braces represents the number or tag of a state:
+Specify a shell command that filters the current state to produce a new
+state, and make the new state current.  If a line ends in backslash,
+prompt for more lines until a line not ending in a backslash is read.
+Text within braces represents the number or tag of a state:
 it is converted into the name of the file holding that state.""")
 
 def help_describe():
     print("""\
-Specify a description of the current state.""")
+Specify a description of the current state.  If a line ends in backslash,
+prompt for more lines until a line not ending in a backslash is read.
 
 def help_edit():
-   print("""\
+   print(f"""\
 Run {g.editor} to edit the current state to produce a new state, and
 make the new state current.""")
 
@@ -113,12 +114,13 @@ The pager should not make any changes to the state.""")
 
 def help_help():
     print("""\
-Display the list of commands and a brief explanation of each.""")
+Display the list of commands and a brief explanation of each.
+If a command is specified, give help on that command.""")
 
 def help_bang():
     print("""\
 Execute the specified shell command. This has no effect on the current
-state or the history.  If the command ends in a backslash, prompt for
+state or the history.  If the command ends in backslash, prompt for
 more lines until a line not ending in a backslash is read.""")
 
 def help(cmd):
@@ -126,35 +128,35 @@ def help(cmd):
         help_main();
     elif cmd == '|':
         help_pipe()
-    elif cmd == 'describe' or arg == 'd':
-        help_describe
-    elif cmd == 'edit' or arg == 'e':
+    elif cmd == 'describe' or cmd == 'd':
+        help_describe()
+    elif cmd == 'edit' or cmd == 'e':
         help_edit()
-    elif cmd  == 'all' or arg == 'a':
+    elif cmd  == 'all' or cmd == 'a':
         help_all()
-    elif cmd == 'undo' or arg == 'u':
+    elif cmd == 'undo' or cmd == 'u':
         help_undo()
-    elif cmd == 'tag' or arg == 't':
+    elif cmd == 'tag' or cmd == 't':
         help_tag()
-    elif cmd == 'jump' or arg == 'j':
+    elif cmd == 'jump' or cmd == 'j':
         help_jump()
-    elif cmd == 'back' or arg == 'b':
+    elif cmd == 'back' or cmd == 'b':
         help_back()
     elif cmd == 'destroy':
         help_destroy()
-    elif cmd == 'quit' or arg == 'q':
+    elif cmd == 'quit' or cmd == 'q':
         help_quit()
-    elif cmd == 'read' or arg == 'r':
+    elif cmd == 'read' or cmd == 'r':
         help_read()
-    elif cmd == 'write' or arg == 'w':
+    elif cmd == 'write' or cmd == 'w':
         help_write()
-    elif cmd == 'mung' or arg == 'm':
+    elif cmd == 'mung' or cmd == 'm':
         help_mung()
-    elif cmd == 'show' or arg == 's':
+    elif cmd == 'show' or cmd == 's':
         help_show()
-    elif cmd == 'page' or arg == 'p':
+    elif cmd == 'page' or cmd == 'p':
         help_page()
-    elif cmd == 'help' or help == 'h':
+    elif cmd == 'help' or cmd == 'h':
         help_help()
     elif cmd == '!':
         help_bang()
