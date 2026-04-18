@@ -66,8 +66,8 @@ def main():
     devino = str(result.st_dev) + '_' + str(result.st_ino)
     g.history_dir = os.path.join(g.history_repo, devino)
     if not os.path.exists(g.history_dir):
-    os.mkdir(g.history_dir)
-    util.newstate()
+        os.mkdir(g.history_dir)
+        util.newstate()
         print(f'Created history for {g.pathname}')
         print(f'  at {g.history_dir}')
     else:

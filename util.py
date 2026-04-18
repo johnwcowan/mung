@@ -33,7 +33,7 @@ def multiline(line, keep):
 
 # escape ' within shell single quotes
 def escape(path):
-    return "'" + .replace("'", "'\\''") + "'" 
+    return "'" + path.replace("'", "'\\''") + "'" 
 
 
 # create a new state

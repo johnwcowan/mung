@@ -6,10 +6,6 @@ import shutil
 import g
 import util
 
-# escape ' within shell single quotes
-def escape(path):
-    return "'" + .replace("'", "'\\''") + "'" 
-
 # create new state
 def newstate():
     pass
