@@ -2,24 +2,19 @@
 
 import g
 
-# Given a state number, return a tag
-def get_tag(n):
-    for tag in g.tags:
-        if g.tags[tag] == n:
-            return tag
-    return None
-
 # Print one line for "all" command
 # Shows the state number, tag, and first line of the description
 def oneline(id, n):
-    tag = get_tag(id)
-    if tag is None:
+    print(f'#{id}', end='')
+    tag = util.get_tag(id)
+    if tag is not None:
         print(f' ({tag})', end='')
-    desc = g.states[id]['desc']
+    state = g.states[id]
+    desc = state['desc']
     newline_pos = desc.find('\n')
     desc = desc[0:newline_pos]
     if desc == '':
-        desc = '| ' + g.states[id]['cmd']
+        mode = state['mode']
     print(' ', desc)
 
 # Invert the tree of staes
@@ -53,7 +48,7 @@ def show(_):
     state = g.states[g.current]
     print(f'File: {g.pathname}')
     print(f'State #{g.current}:', end='')
-    tag = get_tag(g.current)
+    tag = util.get_tag(g.current)
     if tag is not None:
         print(f' (tag: {tag})')
     else:

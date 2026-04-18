@@ -6,15 +6,15 @@
 import os
 
 # The history repository pathname is $MUNG_REPOSITORY,
-# or failing that it is $XDG_DATA_HOME/mung,
+# or failing that it is $XDG_STATE_HOME/mung,
 # or failing that it is $HOME/.local/share/mung.
 home = os.getenv('HOME')
-data_home = os.getenv('XDG_DATA_HOME')
+state_home = os.getenv('XDG_STATE_HOME')
 history_repo = os.getenv('MUNG_REPOSITORY')
 if history_repo is not None:
     pass
-elif data_home is not None:
-    history_repo = os.path.join(data_home, 'mung')
+elif state_home is not None:
+    history_repo = os.path.join(state_home, 'mung')
 else:
     history_repo = os.path.join(home, '.local/share/mung')
 

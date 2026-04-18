@@ -49,3 +49,13 @@ def newstate():
     g.states.append(state)
     shutil.copy(g.pathname, os.path.join(g.history_dir, str(newcurrent)))
     util.save()
+
+
+# Given a state number, return a tag
+# Given a state number, return a tag
+def get_tag(n):
+    for tag in g.tags:
+        if g.tags[tag] == n:
+            return tag
+    return None
+

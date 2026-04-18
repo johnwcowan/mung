@@ -46,7 +46,7 @@ def destroy(_):
             print(f'State for {pathname} cannot be removed', file=sys.stderr)
         except FileNotFoundError:
             print(f'{pathname} is not being munged', file=sys.stderr)
-        print('mung: terminating with history destroyed')
+        print('mung: terminating with history destroyed', file=sys.stderr)
         exit(0)
     else:
        print('Write file and then destroy again')
@@ -62,7 +62,7 @@ def jump(newstate):
     util.save()
 
 def quit(_):
-    print('mung: terminating with history preserved')
+    print('mung: terminating with history preserved', file=sys.stderr)
     sys.exit(0)
 
 def tag(newtag):
