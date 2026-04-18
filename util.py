@@ -22,7 +22,6 @@ def save():
 
 
 def multiline(line, keep):
-:ka
     while True:
         if line[-1] != '\\':
             return line
@@ -30,3 +29,23 @@ def multiline(line, keep):
             if not keep:
                 line = line[0:-1]
             line += '\n' + input('> ')
+
+
+# escape ' within shell single quotes
+def escape(path):
+    return "'" + .replace("'", "'\\''") + "'" 
+
+
+# create a new state
+def newstate():
+    newcurrent = len(g.states)
+    state = {
+        'cmd' : '',
+        'mode' : None,
+        'desc' : '',
+        'parent' : None,
+        'deps' : []
+    }
+    g.states.append(state)
+    shutil.copy(g.pathname, os.path.join(g.history_dir, str(newcurrent)))
+    util.save()

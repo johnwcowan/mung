@@ -58,24 +58,30 @@ def show(_):
         print(f' (tag: {tag})')
     else:
         print()
-    print('  Command; ', end='')
-    cmd = state['cmd']
-    if cmd is None:
-        print('none')
-    else:
-        print(cmd)
-    print('  Parent; ', end='')
+    mode = state['mode']
+    if mode is None:
+        pass
+    elif mode == 'pipe':
+        print('  Command: ', end='')
+        cmd = state['cmd']
+        if cmd is None:
+            print('none')
+        else:
+            print(cmd)
+    elif mode == 'edit':
+        print(  'Edited')
+    elif mode == 'read':
+        readfile = g.states[g.current]['cmd']
+        print(f'  Read file: {readfile}')
+    print('  Parent: ', end='')
     parent = state['parent']
     if parent is None:
         print('none')
     else:
         print(parent)
-    print('  Dependencies: ', end='')
     deps = ', '.join(state['deps'])
-    if deps == '':
-        print('none')
-    else:
-        print(deps)
+    if deps != '':
+        print('  Dependencies: {deps} ', end='')
     desc = state['desc']
     if desc == '\n' or desc == '':
         print('  Description: none')

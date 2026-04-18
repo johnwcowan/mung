@@ -29,7 +29,7 @@ import shutil
 import json
 
 import g
-import save
+import util
 import repl
 
 # Load the current state from the history directory
@@ -49,24 +49,9 @@ def load():
        g.current = int(file.readline().rstrip())
 
 
-# Initialize a new history directory
-def init():
-    os.mkdir(g.history_dir)
-    g.states = [{
-        'cmd' : '',
-        'desc' : '',
-        'parent' : None,
-        'deps' : []
-    }]
-    g.tags = {}
-    g.stack = []
-    shutil.copy(g.pathname, os.path.join(g.history_dir, '0'))
-    util.save()
-
-
 def main():
     if len(sys.argv) != 2:
-        print('usage: mung file')
+        print('usage: mung file', file=sys.stderr)
         sys.exit(1)
     g.pathname = sys.argv[1]
     if not os.path.exists(g.pathname):
@@ -81,7 +66,8 @@ def main():
     devino = str(result.st_dev) + '_' + str(result.st_ino)
     g.history_dir = os.path.join(g.history_repo, devino)
     if not os.path.exists(g.history_dir):
-        init()
+    os.mkdir(g.history_dir)
+    util.newstate()
         print(f'Created history for {g.pathname}')
         print(f'  at {g.history_dir}')
     else:

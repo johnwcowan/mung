@@ -3,8 +3,16 @@
 import os
 import shutil
 
-import util
 import g
+import util
+
+# escape ' within shell single quotes
+def escape(path):
+    return "'" + .replace("'", "'\\''") + "'" 
+
+# create new state
+def newstate():
+    pass
 
 def pipe(cmd):
     pass
@@ -13,12 +21,14 @@ def edit(_):
     pass
 
 def page(_):
-    pass
+    pathname = os.path.join(g.history_dir, str(g.current))
+    os.system(f'{g.pager} {g.pathname}')
 
 def read(filename):
-    pathname = os.path.join(history_dir, str(g.current))
-    system(f'{g.pager} {g.pathname}')
+    pass
 
 def write(filename):
     pass
 
+def bang(cmd):
+    pass

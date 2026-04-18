@@ -45,7 +45,7 @@ it is converted into the name of the file holding that state.""")
 def help_describe():
     print("""\
 Specify a description of the current state.  If a line ends in backslash,
-prompt for more lines until a line not ending in a backslash is read.
+prompt for more lines until a line not ending in a backslash is read.""")
 
 def help_edit():
    print(f"""\

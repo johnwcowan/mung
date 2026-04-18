@@ -5,19 +5,28 @@
 
 import os
 
+# The history repository pathname is $MUNG_REPOSITORY,
+# or failing that it is $XDG_DATA_HOME/mung,
+# or failing that it is $HOME/.local/share/mung.
 home = os.getenv('HOME')
-history_repo = os.getenv('MUNG_REPOSITORY',
-                         os.path.join(home, '.local/share/mung'))
-history_dir = None	# pathname of directory holding history
+data_home = os.getenv('XDG_DATA_HOME')
+history_repo = os.getenv('MUNG_REPOSITORY')
+if history_repo is not None:
+    pass
+elif data_home is not None:
+    history_repo = os.path.join(data_home, 'mung')
+else:
+    history_repo = os.path.join(home, '.local/share/mung')
 
+history_dir = None	# pathname of directory holding history
 pathname = ''		# pathname of file being munged
 states = None		# list of state dictionaries with keys 'cmd' and 'desc'
-tags = None		# map from tags to ids
-jump_stack = None	# stack of ids for jumps and returns
-undo_stack = None	# stack of ids for jumps and returns
+tags = {}		# map from tags to ids
+stack = []		# stack of ids for jumps and returns
 current = 0		# current state id
 last_was_write = False	# last command was a write
 
+# External commands
 editor = os.getenv('VISUAL', os.getenv('EDITOR', 'vi'))
 pager = os.getenv('PAGER', 'less')
 shell = os.getenv('SHELL')
