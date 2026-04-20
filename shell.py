@@ -16,7 +16,8 @@ def pipe(cmd):
     state['parent'] = g.current
     new_pathname = os.path.join(g.history_dir, str(newcurrent))
     old_pathname = os.path.join(g.history_dir, str(g.current))
-    os.system(f' <{old_pathname} cmd >{new_pathname}')
+    breakpoint()
+    os.system(f' <{old_pathname} {cmd} >{new_pathname}')
     g.current = newcurrent
     util.save()
 
