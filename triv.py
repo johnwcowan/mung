@@ -23,7 +23,7 @@ def back(_):
     try:
         g.current = g.stack.pop()
         print(f'Now in state #{g.current}')
-        util.save()
+        g.save()
     except IndexError:
         print('Nowhere to go back to')
 
@@ -35,14 +35,14 @@ def describe(desc):
             desc = "| " + cmd
         print(desc, end='')
     else:
-        desc = util.multiline(desc, False)
+        desc = g.multiline(desc, False)
         g.states[g.current]['desc'] = desc + '\n'
-        util.save()
+        g.save()
 
 def destroy(_):
     if g.last_was_write:
         try:
-            shutil.rmtree(g.history_dir)
+            shg.rmtree(g.history_dir)
         except PermissionError:
             print(f'State for {pathname} cannot be removed', file=sys.stderr)
         except FileNotFoundError:
@@ -60,7 +60,7 @@ def jump(newstate):
     g.stack.append(g.current)
     g.current = newstate
     print(f'Now in state #{g.current}')
-    util.save()
+    g.save()
 
 def quit(_):
     print('mung: terminating with history preserved', file=sys.stderr)
@@ -74,7 +74,7 @@ def tag(newtag):
         _ = int(newtag)
     except ValueError:
         g.tags[newtag] = g.current
-        util.save()
+        g.save()
         return
     print('Tag cannot be numeric')
 
@@ -86,5 +86,5 @@ def undo(_):
     g.stack.append(g.current)
     g.current = newcurrent
     print(f'Now in state #{g.current}')
-    util.save()
+    g.save()
 

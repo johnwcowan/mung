@@ -3,11 +3,20 @@
 import g
 import util
 
+
+# Given a state number, return a tag
+def get_tag(n):
+    for tag in tags:
+        if tags[tag] == n:
+            return tag
+    return None
+
+
 # Print one line for "all" command
 # Shows the state number, tag, and first line of the description
 def oneline(id, n):
     print(f'#{id}', end='')
-    tag = util.get_tag(id)
+    tag = get_tag(id)
     if tag is not None:
         print(f' ({tag})', end='')
     state = g.states[id]
@@ -49,7 +58,7 @@ def show(_):
     state = g.states[g.current]
     print(f'File: {g.pathname}')
     print(f'State #{g.current}:', end='')
-    tag = util.get_tag(g.current)
+    tag = get_tag(g.current)
     if tag is not None:
         print(f' (tag: {tag})')
     else:

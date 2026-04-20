@@ -29,7 +29,6 @@ import shutil
 import json
 
 import g
-import util
 import garbage
 import repl
 
@@ -75,9 +74,9 @@ def main():
     g.history_dir = os.path.join(g.history_repo, devino)
     if not os.path.exists(g.history_dir):
         os.mkdir(g.history_dir)
-        newcurrent, state = util.newstate()
+        newcurrent, state = g.newstate()
         shutil.copy(g.pathname, os.path.join(g.history_dir, str(newcurrent)))
-        util.save()
+        g.save()
         print(f'Created history for {g.pathname}')
         print(f'  at {g.history_dir}')
     else:

@@ -4,7 +4,7 @@ import os
 import g
 
 def help_main():
-    os.system(f"""{g.pager} <<END
+    os.system(f"""{g.escape(g.pager)} <<END
 Editing commands:
 |               filter state to make new state
 describe / d    set description for state

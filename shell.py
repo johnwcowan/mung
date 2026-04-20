@@ -5,34 +5,32 @@ import shutil
 import sys
 
 import g
-import util
 
 
 def pipe(cmd):
-    cmd = util.multiline(cmd, True)
-    newcurrent, state = util.newstate()
+    cmd = g.multiline(cmd, True)
+    newcurrent, state = g.newstate()
     state['cmd'] = cmd
     state['mode'] = 'pipe'
     state['parent'] = g.current
     new_pathname = os.path.join(g.history_dir, str(newcurrent))
     old_pathname = os.path.join(g.history_dir, str(g.current))
-    breakpoint()
-    os.system(f' <{old_pathname} {cmd} >{new_pathname}')
+    os.system(f'<{g.escape(old_pathname)} {cmd} >{g.escape(new_pathname)}')
     g.current = newcurrent
-    util.save()
+    g.save()
 
 
 def edit(_):
-    newcurrent, state = util.newstate()
+    newcurrent, state = g.newstate()
     state['cmd'] = None
     state['mode'] = 'edit'
     state['parent'] = g.current
     new_pathname = os.path.join(g.history_dir, str(newcurrent))
     old_pathname = os.path.join(g.history_dir, str(g.current))
     shutil.copy(old_pathname, new_pathname)
-    os.system(f'{g.editor} {new_pathname}')
+    os.system(f'{g.escape(g.editor)} {g.escape(new_pathname)}')
     g.current = newcurrent
-    util.save()
+    g.save()
 
 
 
@@ -40,19 +38,19 @@ def page(pager):
     if pager is None:
         pager = g.pager
     pathname = os.path.join(g.history_dir, str(g.current))
-    os.system(f'{pager} {pathname}')
+    os.system(f'{g.escape(pager)} {g.escape(pathname)}')
 
 
 def read(filename):
     source_pathname = os.path.join(os.getcwd(), filename)
-    newcurrent, state = util.newstate()
+    newcurrent, state = g.newstate()
     state['cmd'] = source_pathname
     state['mode'] = 'file'
     state['parent'] = g.current
     state_pathname = os.path.join(g.history_dir, str(newcurrent))
     shutil.copy(source_pathname, state_pathname)
     g.current = newcurrent
-    util.save()
+    g.save()
 
 
 # Write the current state file to filename
@@ -67,5 +65,5 @@ def write(filename):
 
 # Execute a shell command.  No effect on mung's data structures.
 def bang(cmd):
-    cmd = util.multiline(cmd, True)
+    cmd = g.multiline(cmd, True)
     os.system(cmd)
