@@ -20,7 +20,6 @@ def repl():
             shell.pipe(cmd[1:])
             continue
         elif cmd[0] == '!':
-            cmd = cmd[1:]
             shell.bang(cmd[1:])
             continue
         elif ' ' not in cmd:

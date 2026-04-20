@@ -3,6 +3,7 @@
 import sys
 
 import g
+import util
 import repl
 
 def detag(tag):
@@ -34,7 +35,7 @@ def describe(desc):
             desc = "| " + cmd
         print(desc, end='')
     else:
-        desc = repl.multiline(desc, False)
+        desc = util.multiline(desc, False)
         g.states[g.current]['desc'] = desc + '\n'
         util.save()
 
@@ -78,13 +79,12 @@ def tag(newtag):
     print('Tag cannot be numeric')
 
 def undo(_):
-    try:
-        newstate = g.states[g.current]['deps'][0]
-    except IndexError:
+    newcurrent = g.states[g.current]['parent']
+    if newcurrent is None:
         print('Nothing to undo')
         return
     g.stack.append(g.current)
-    g.current = newstate
+    g.current = newcurrent
     print(f'Now in state #{g.current}')
     util.save()
 

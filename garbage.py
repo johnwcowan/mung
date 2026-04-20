@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
-# The mung-gc command runs a garbage collector over the master history
+# The mung --gc command runs a garbage collector over the master history
 # directory and makes the files in the tree agree with the histories.
 # This happens when the file being munged is deleted or replaced but the
 # history is not removed.
 
-# Here's what is done.  Read through the directory of all histories,
-# which is $MUNG_ALL_HISTORIES (or by default $HOME/.mung)   The file
+# Here's what is done.  Read through the history repository, The file
 # whose pathname appears in "pathname" in each history directory is
 # checked to determine its device and inode numbers, which are an absolute
 # identification of the file (they do not change if the file is renamed
@@ -18,12 +17,12 @@
 # for the new name).  If it does not exist, ask about restoring it from
 # the current state. In either case, ask about destroying the history.
 
-# This file is self-contained and is not part of the mung command.
-
+# This file is self-contained and only loosely tied to the mung command.
 import os
 import shutil
 import sys
 
+import g
 
 def make_devino(name):
     result = os.stat(name)
@@ -53,7 +52,9 @@ def get_current(history_dir):
 
 
 # Destroy the histories given on the command line directory
-def destroy():
+
+# Destroy histories of named files
+def destroy_histories():
     for pathname in sys.argv[2:]:
         history_devino = make_devino(pathname)
         history_dir = os.path.join(history_repo, history_devino)
@@ -65,18 +66,13 @@ def destroy():
             print(f'{pathname} is not being munged', file=sys.stderr)
 
 
-# The main program
-def main():
-    if len(sys.argv) == 0:
-        print('usage: mung_gc [--destroy file ...]', file=sys.stderr)
-        exit(1)
-    elif sys.argv[1] == '--destroy':
+# The garbage collector
+def garbage():
+    if len(sys.argv) < 3 and sys.argv[2] == '--destroy':
         sys.exit(destroy())
 
     # Set up the variables and create the history repository if needed
     home = os.getenv('HOME')
-    history_repo = os.getenv('MUNG_REPOSITORY',
-                             os.path.join(home, '.local/share/mung'))
     if not os.path.exists(history_repo):
         os.mkdir(history_repo)
         print(f'mung: {history_repo} does not exist', file=sys.stderr)
@@ -112,13 +108,13 @@ def main():
             shutil.move(pathname, os.path.abspath(new_pathname))
             shutil.move(history_dir, os.path.join(history_repo, new_devino))
             shutil.copy(os.path.join(history_dir, current(history_dir)). pathname)
-                new_devino = make_devino(pathname)
-                shutil.move(history_dir, os.path.join(history_repo, new_devino)
-            elif remove:
+            new_devino = make_devino(pathname)
+            shutil.move(history_dir, os.path.join(history_repo, new_devino))
+        elif remove:
                 shutil.rmtree(history_dir)
         else:  # pathname does not exist
-            if yesno('{pathname} missing: replace', 'y')
-                with os.path.join(history_dir, 'filename') as file
+            if yesno('{pathname} missing: replace', 'y'):
+                with os.path.join(history_dir, 'filename') as file:
                     print(pathname, file=sys.stderr)
 
     line = line.rstrip()
@@ -129,10 +125,10 @@ def main():
         name = devino_name[1]
     history_dir = os.path.join(history_repo, devino)
     if os.path.exists(name):
-            name = input('  New file: ')
-            name = os.path.abspath(name)
-            with open(os.path.join(history_dir, 'filename'), 'w') as file:
-                print(name, file=file)
+        name = input('  New file: ')
+        name = os.path.abspath(name)
+        with open(os.path.join(history_dir, 'filename'), 'w') as file:
+            print(name, file=file)
         new_devino = make_devino(name)
         shutil.move(history_dir, os.path.join(history_repo, new_devino))
     else:
@@ -140,6 +136,3 @@ def main():
             shutil.copy(os.path.join(history_dir, get_current(history_dir)), name)
             devino = make_devino(name)
             shutil.move(history_dir, os.path.join(history_repo, devino))
-    
-if __name__ == "__main__":
-    main()

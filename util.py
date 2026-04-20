@@ -47,11 +47,9 @@ def newstate():
         'deps' : []
     }
     g.states.append(state)
-    shutil.copy(g.pathname, os.path.join(g.history_dir, str(newcurrent)))
-    util.save()
+    return newcurrent, state
 
 
-# Given a state number, return a tag
 # Given a state number, return a tag
 def get_tag(n):
     for tag in g.tags:

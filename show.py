@@ -1,6 +1,7 @@
 # Display the tree or a single node
 
 import g
+import util
 
 # Print one line for "all" command
 # Shows the state number, tag, and first line of the description
@@ -65,9 +66,9 @@ def show(_):
             print(cmd)
     elif mode == 'edit':
         print(  'Edited')
-    elif mode == 'read':
-        readfile = g.states[g.current]['cmd']
-        print(f'  Read file: {readfile}')
+    elif mode == 'file':
+        readfile = state['cmd']
+        print(f'  From file: {readfile}')
     print('  Parent: ', end='')
     parent = state['parent']
     if parent is None:

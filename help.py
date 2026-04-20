@@ -29,7 +29,7 @@ mung / m        write script to get to current state to specified file
 
 Miscellaneous commands:
 show / s        file and state metadata
-page / p        view state with $PAGER
+page / p        view current state with pager
 help / h        show this help
 !               run shell command (backslash for multiline command)
 END """)
@@ -109,8 +109,13 @@ Display information about the file being munged and the current state.""")
 
 def help_page():
     print("""\
-View the contents of the current state using {g.pager}.
-The pager should not make any changes to the state.""")
+View the contents of the current state using the specified pager.
+The pager should not make any changes to the state.  The default pager
+is {g.pager}.""")
+
+def help_cat():
+    print("""\
+Send the contents of the current state to the standard output""")
 
 def help_help():
     print("""\

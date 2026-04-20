@@ -16,11 +16,11 @@ if history_repo is not None:
 elif state_home is not None:
     history_repo = os.path.join(state_home, 'mung')
 else:
-    history_repo = os.path.join(home, '.local/share/mung')
+    history_repo = os.path.join(home, '.local/state/mung')
 
 history_dir = None	# pathname of directory holding history
 pathname = ''		# pathname of file being munged
-states = None		# list of state dictionaries with keys 'cmd' and 'desc'
+states = []		# list of state dictionaries with keys 'cmd' and 'desc'
 tags = {}		# map from tags to ids
 stack = []		# stack of ids for jumps and returns
 current = 0		# current state id

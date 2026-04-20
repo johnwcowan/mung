@@ -30,6 +30,7 @@ import json
 
 import g
 import util
+import garbage
 import repl
 
 # Load the current state from the history directory
@@ -37,7 +38,7 @@ def load():
     with open(os.path.join(g.history_dir, 'pathname'), 'r') as file:
         saved_pathname = file.readline().rstrip()
     if saved_pathname != g.pathname:
-        print(f'mung: {g.pathname} does not match state: run mung_gc',
+        print(f'mung: {g.pathname} does not match state: run mung --gc',
               file=sys.stderr)
         sys.exit(1)
     with open(os.path.join(g.history_dir, 'state.json'), 'r') as file:
@@ -50,9 +51,16 @@ def load():
 
 
 def main():
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         print('usage: mung file', file=sys.stderr)
+        print('       mung --gc', file=sys.stderr)
+        print('       mung --destroy file ...]', file=sys.stderr)
         sys.exit(1)
+    if sys.argv[1] == '--gc':
+        garbage.garbage()
+        sys.exit(0)
+    elif sys.argv[1] == '--destroy':
+        sys.exit(garbage.destroy_histories())
     g.pathname = sys.argv[1]
     if not os.path.exists(g.pathname):
         print(f'mung: {g.pathname} not found', file=sys.stderr)
@@ -67,7 +75,9 @@ def main():
     g.history_dir = os.path.join(g.history_repo, devino)
     if not os.path.exists(g.history_dir):
         os.mkdir(g.history_dir)
-        util.newstate()
+        newcurrent, state = util.newstate()
+        shutil.copy(g.pathname, os.path.join(g.history_dir, str(newcurrent)))
+        util.save()
         print(f'Created history for {g.pathname}')
         print(f'  at {g.history_dir}')
     else:
