@@ -37,7 +37,7 @@ END """)
 def help_pipe():
     print("""\
 Specify a shell command that filters the current state to produce a new
-state, and make the new state current.  If a line ends in backslash,
+state, and make the new state current.  If the line ends in a backslash,
 prompt for more lines until a line not ending in a backslash is read.
 Text within braces represents the number or tag of a state:
 it is converted into the name of the file holding that state.""")
@@ -112,10 +112,6 @@ def help_page():
 View the contents of the current state using the specified pager.
 The pager should not make any changes to the state.  The default pager
 is {g.pager}.""")
-
-def help_cat():
-    print("""\
-Send the contents of the current state to the standard output""")
 
 def help_help():
     print("""\

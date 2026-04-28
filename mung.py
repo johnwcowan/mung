@@ -6,7 +6,7 @@
 # characters, passes the entire file through a series of shell filters.
 # The results of each filer are saved in a history along with metadata
 # that allows reconstruction of how the munging was done.  The histories
-# are kept in a history repository, by default $MUNG_ALL_REPOSITORIES.
+# are kept in a history repository, by default $MUNG_REPOSITORY.
 
 # The commands allow the creation of a tree rather than just a sequence of
 # states, and it's possible to display and move around the tree of states,
