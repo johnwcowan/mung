@@ -1,5 +1,6 @@
 # The mung command loop
 
+import g
 import help
 import script
 import shell
@@ -9,11 +10,14 @@ import triv
 def repl():
     while True:
         try:
-            cmd = input('* ')
+            cmd = input(f'#{g.current}: ')
             cmd = cmd.strip()
         except EOFError:
             print()
             triv.quit("")
+        except KeyboardInterrupt:
+            print()
+            continue
         if cmd == '':
             continue
         if cmd[0] == '|':
@@ -47,6 +51,8 @@ def repl():
             triv.tag(arg)
         elif cmd == 'jump' or cmd == 'j':
             triv.jump(arg)
+        elif str.isdecimal(cmd):
+            triv.jump(cmd)
         elif cmd == 'back' or cmd == 'b':
             triv.back(arg)
         elif cmd == 'destroy':

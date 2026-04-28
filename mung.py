@@ -30,6 +30,7 @@ import json
 
 import g
 import garbage
+import help
 import repl
 
 # Load the current state from the history directory
@@ -44,7 +45,6 @@ def load():
         whole = json.load(file)
     g.states = whole['states']
     g.tags = whole['tags']
-    g.stack = whole['stack']
     with open(os.path.join(g.history_dir, 'current'), 'r') as file:
        g.current = int(file.readline().rstrip())
 
@@ -55,11 +55,18 @@ def main():
         print('       mung --gc', file=sys.stderr)
         print('       mung --destroy file ...]', file=sys.stderr)
         sys.exit(1)
-    if sys.argv[1] == '--gc':
+    option = sys.argv[1]
+    if option == '--gc':
         garbage.garbage()
         sys.exit(0)
-    elif sys.argv[1] == '--destroy':
+    elif option == '--destroy':
         sys.exit(garbage.destroy_histories())
+    elif option == '-h' or option == '--help':
+        help.help_main()
+        print('%%%% FIXME')
+        sys.exit(0)
+    elif option == '-v' or option == 'version':
+        print('mung version 0.5')
     g.pathname = sys.argv[1]
     if not os.path.exists(g.pathname):
         print(f'mung: {g.pathname} not found', file=sys.stderr)

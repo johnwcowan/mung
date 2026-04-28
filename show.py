@@ -1,95 +1,82 @@
 # Display the tree or a single node
 
 import g
-import util
 
 
 # Given a state number, return a tag
 def get_tag(n):
-    for tag in tags:
-        if tags[tag] == n:
+    for tag in g.tags:
+        if g.tags[tag] == n:
             return tag
     return None
 
 
-# Print one line for "all" command
+# Print one line for "all" and "show" commands
 # Shows the state number, tag, and first line of the description
-def oneline(id, n):
-    print(f'#{id}', end='')
+# If there is no description, use the command;
+# if there is no command, use "Edited" or "Read file".
+# Returns the rest of the description
+def print_one(id, depth):
+    spaces = "  " * depth
+    print(f'{spaces}#{id}', end='')
     tag = get_tag(id)
     if tag is not None:
-        print(f' ({tag})', end='')
+        print(f':{tag}', end='')
     state = g.states[id]
     desc = state['desc']
     newline_pos = desc.find('\n')
-    desc = desc[0:newline_pos]
-    if desc == '':
-        mode = state['mode']
-    print(' ', desc)
+    short_desc = desc[0:newline_pos]
+    mode = state['mode']
+    cmd = state['cmd']
+    if short_desc != '':
+        pass
+    elif (mode == None):
+	    short_desc = 'initial state'
+    elif mode == 'edit':
+        short_desc = 'Edited'
+    elif mode == 'file':
+        short_desc = 'Read file:' + cmd
+    elif mode == 'pipe':
+        short_desc = 'Command: ' + cmd
+    print(' ', short_desc)
+    return desc[newline_pos+1:]
 
-# Invert the tree of staes
+
+# Invert the tree of states
 # Whereas g.states has each state holding its parent,
 # the result of this function has each state holding its children.
 def invert_tree():
     count = len(g.states)
     result = [[] for _ in range(0, count)]
-    for child in range(0, count - 1):
+    for child in range(1, count):
         parent = g.states[child]['parent']
         result[parent].append(child)
     return result
 
+
 # Print the children (and their children, etc.) with proper indentation.
-# Uses oneline to do the actual printing.
-def recur(tree, id, depth):
+# Uses print_one to do the actual printing.
+def print_subtree(tree, id, depth):
+    print_one(id, depth)
     children = tree[id]
-    if len(children) != 0:
-        oneline(children[0], n)
-        for child in children[1:-1]:
-            oneline(child, n + 1)
-            recur(tree, child, depth + 1)
+    for child_index in range(0, len(children)):
+        child = children[child_index]
+        print_subtree(tree, children[child_index], depth + 1)
 
 # The 'all' command.
 def all(_):
     tree = invert_tree()
-    oneline(0, 0)
-    recur(tree, 0, 0)
+    print(f'tree={tree}')
+    print_subtree(tree, 0, 0)
 
 def show(_):
-    state = g.states[g.current]
     print(f'File: {g.pathname}')
-    print(f'State #{g.current}:', end='')
-    tag = get_tag(g.current)
-    if tag is not None:
-        print(f' (tag: {tag})')
-    else:
-        print()
-    mode = state['mode']
-    if mode is None:
-        pass
-    elif mode == 'pipe':
-        print('  Command: ', end='')
-        cmd = state['cmd']
-        if cmd is None:
-            print('none')
-        else:
-            print(cmd)
-    elif mode == 'edit':
-        print(  'Edited')
-    elif mode == 'file':
-        readfile = state['cmd']
-        print(f'  From file: {readfile}')
-    print('  Parent: ', end='')
-    parent = state['parent']
+    desc = print_one(g.current, 0)
+    print(desc)
+    print('Parent: ', end='')
+    parent = g.states[g.current]['parent']
     if parent is None:
         print('none')
     else:
         print(parent)
-    deps = ', '.join(state['deps'])
-    if deps != '':
-        print('  Dependencies: {deps} ', end='')
-    desc = state['desc']
-    if desc == '\n' or desc == '':
-        print('  Description: none')
-    else:
-        print(f'  Description:\n{desc}')
 

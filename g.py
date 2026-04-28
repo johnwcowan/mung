@@ -40,7 +40,6 @@ def save():
     whole = {
         'states' : states,
         'tags' : tags,
-        'stack' : stack,
     }
     with open(os.path.join(history_dir, 'pathname'), 'w') as file:
         print(pathname, file=file)
