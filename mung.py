@@ -53,7 +53,7 @@ def main():
     if len(sys.argv) < 2:
         print('usage: mung file', file=sys.stderr)
         print('       mung --gc', file=sys.stderr)
-        print('       mung --destroy file ...]', file=sys.stderr)
+        print('       mung --destroy file ...', file=sys.stderr)
         sys.exit(1)
     option = sys.argv[1]
     if option == '--gc':

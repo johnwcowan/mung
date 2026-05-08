@@ -27,7 +27,7 @@ If invoked with a
 .Ar file
 argument, then a copy of
 .Ar file
-is read into the editor's buffer.
+is read into the buffer.
 Changes are made to this copy and not directly to
 .Ar file
 itself.
@@ -46,15 +46,15 @@ The results of each filer are saved
 in a history directory along with metadata
 that allows reconstruction of how the munging was done.
 The histories
-are kept in a history repository, by default $MUNG_REPOSITORY.
+are kept in a history repository.
 .Pp
 The commands allow the creation of a tree rather than just a sequence of
-states, and it's possible to display and move around the tree of states,
+states, and it is possible to display and move around the tree of states,
 creating new states at any point.
 A state can be written back to the
 original file or to any other file.
 An ordinary interactive editor can
-be run on a state to create a new state, and it's also possible for a
+be run on a state to create a new state, and it is also possible for a
 new state to be created by reading in an existing file.
 .Pp
 States can be given a unique tag and a textual description, and its
@@ -84,7 +84,7 @@ A typical command might look like
 .
 .Pp
 .Bl -item -offset indent
-.      Cm sed 's\&/ Ar old \&/ Ar new Nm \&/g'
+.      Cm sed "s\&/ Ar old \&/ Ar new Nm \&/g"
 .El
 .
 .Pp
@@ -132,7 +132,7 @@ Print version information, then exit.
 All
 .Nm
 commands can be given using either words or single characters, though
-some require additional parameters. If a command's parameters extend
+some require additional parameters. If a command extends
 over several lines, then each line except for the last must be terminated
 with a
 .Cm \e
@@ -280,9 +280,10 @@ without changing the history or the current state.
 .Sh ENVIRONMENT
 The environment variable
 .Ev MUNG_REPOSITORY
-is the absolute pathname of where all the
-repository directories are kept.
-The default value is $HOME/.local/share/mung.
+is the absolute pathname of the directory where all the
+ repository directories for this user are kept.
+The default value is $XDG_STATE_HOME/mung,
+or failing that, $HOME/.local/share/mung.
 .Pp
 The environment variable
 .Ev VISUAL
@@ -332,6 +333,7 @@ the contents of each state
 .Sh SEE ALSO
 .Xr awk 1 ,
 .Xr cat 1 ,
+.Xr cmp 1 ,
 .Xr comm 1 ,
 .Xr cut 1 ,
 .Xr datamash 1 ,
@@ -348,6 +350,8 @@ the contents of each state
 .Xr most 1 ,
 .Xr nl 1 ,
 .Xr paste 1 ,
+.Xr perlrun 1
+(especially the one-liners),
 .Xr sed 1 ,
 .Xr shuf 1 ,
 .Xr sort 1 ,
