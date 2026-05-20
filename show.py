@@ -31,7 +31,7 @@ def print_one(id, depth):
     if short_desc != '':
         pass
     elif (mode == None):
-	    short_desc = 'initial state'
+        short_desc = 'initial state'
     elif mode == 'edit':
         short_desc = 'Edited'
     elif mode == 'file':
